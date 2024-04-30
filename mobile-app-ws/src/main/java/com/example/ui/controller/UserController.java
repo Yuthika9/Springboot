@@ -13,10 +13,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController{
 	
 	
-	@GetMapping 
-	public String getUser()
+	@GetMapping()
+	public String getUser(@RequestParam (value = "page", defaultValue = "1") int page,
+						  @RequestParam (value = "limit",defaultValue = "20") int size,
+						  @RequestParam (value = "sort" , required = false, defaultValue = "desc") String sort)
+
 	{
-		return "get user was called";
+		return "get user was called with page " +page + " ,limit " +size + " ,sort " +sort;
+	}
+
+	@GetMapping(path = "/users/{userId}")
+	public String getUser(@PathVariable String userId)
+	{
+		return "get user was called with userId: " + userId;
 	}
 	
 	@PostMapping
