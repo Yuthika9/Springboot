@@ -1,12 +1,15 @@
 package com.example.ui.controller;
 
-import com.example.UserRest;
+import com.example.ui.model.request.UserDetailsRequestModel;
+import com.example.ui.model.response.UserRest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("users") //http://localhost:8080/users
+@RequestMapping("/users") //http://localhost:8080/users
 
 public class UserController{
 
@@ -19,7 +22,11 @@ public class UserController{
 		return "get user was called with page " +page + " ,limit " +size + " ,sort " +sort;
 	}
 
-	@GetMapping(path = "{userId}")
+	@GetMapping(path = "/{userId}" ,
+			produces = {
+					MediaType.APPLICATION_XML_VALUE ,
+					MediaType.APPLICATION_JSON_VALUE
+					})
 	public ResponseEntity<UserRest> getUser(@PathVariable String userId)
 	{
 		UserRest returnValue = new UserRest();
@@ -31,10 +38,22 @@ public class UserController{
 		return new ResponseEntity<>(returnValue, HttpStatus.BAD_REQUEST);
 	}
 	
-	@PostMapping
-	public String createUser()
+	@PostMapping(consumes = {
+			MediaType.APPLICATION_XML_VALUE ,
+			MediaType.APPLICATION_JSON_VALUE
+			}, produces = {
+				MediaType.APPLICATION_XML_VALUE ,
+				MediaType.APPLICATION_JSON_VALUE
+			})
+	public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails)
 	{
-		return "create user was called";
+		UserRest returnValue = new UserRest();
+
+		returnValue.setFirstName(userDetails.getFirstName());
+		returnValue.setLastName(userDetails.getLastName());
+		returnValue.setEmail(userDetails.getEmail());
+
+		return new ResponseEntity<>(returnValue, HttpStatus.OK);
 	}
 	
 	@PutMapping
