@@ -19,6 +19,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-web-services")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
 }
