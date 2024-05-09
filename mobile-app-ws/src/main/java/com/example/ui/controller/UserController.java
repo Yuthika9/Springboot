@@ -1,9 +1,12 @@
 package com.example.ui.controller;
 
+import com.example.exceptions.UserServiceException;
 import com.example.ui.model.request.UpdateUserDetailsRequestModel;
 import com.example.ui.model.request.UserDetailsRequestModel;
 import com.example.ui.model.response.UserRest;
+import com.example.userservice.UserService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,9 @@ public class UserController{
 
 	Map<String, UserRest> users;
 
+	@Autowired
+	UserService userService;
+
 	@GetMapping()
 	public String getUser(@RequestParam(value = "page", defaultValue = "1") int page,
 						  @RequestParam (value = "limit",defaultValue = "20") int size,
@@ -28,6 +34,7 @@ public class UserController{
 	{
 		return "get user was called with page " +page + " ,limit " +size + " ,sort " +sort;
 	}
+
 
 	@GetMapping(path = "/{userId}" ,
 			produces = {
@@ -54,18 +61,7 @@ public class UserController{
 			})
 	public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails)
 	{
-		UserRest returnValue = new UserRest();
-
-		returnValue.setFirstName(userDetails.getFirstName());
-		returnValue.setLastName(userDetails.getLastName());
-		returnValue.setEmail(userDetails.getEmail());
-
-		String userId = UUID.randomUUID().toString();
-		returnValue.setUserId(userId);
-
-		if(users == null) users = new HashMap<>();
-		users.put(userId, returnValue);
-
+		UserRest returnValue = userService.createUser(userDetails);
 		return new ResponseEntity<>(returnValue, HttpStatus.OK);
 	}
 	
